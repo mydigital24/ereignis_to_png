@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Poster Generator PWA</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Poster App">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ical.js@1.5.0/build/ical.min.js"></script>
+</head>
+<body>
+
+    <header>
+        <h1>Poster Generator</h1>
+    </header>
+
+    <main>
+        
+        <section class="controls">
+            
+            <div class="control-group">
+                <label for="ics-upload" class="button-like" id="ics-upload-label">📅 .ICS Datei importieren</label>
+                <input type="file" id="ics-upload" accept=".ics" style="display:none;">
+            </div>
+
+            <div class="control-group">
+                <div class="style-toggle">
+                    <label for="style-select">Poster Stil:</label>
+                    <select id="style-select">
+                        <option value="modern">Modern Minimal</option>
+                        <option value="elegant">Elegant</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="control-group color-controls">
+                <label for="text-color">Textfarbe:</label>
+                <input type="color" id="text-color" value="#343a40">
+                
+                <label for="bg-color">Hintergrundfarbe (Modern):</label>
+                <input type="color" id="bg-color" value="#ffffff">
+            </div>
+            
+        </section>
+        
+        <div id="poster-container">
+            <div id="poster" class="poster modern">
+                <div class="poster-content">
+                    <p id="poster-date" class="date" contenteditable="true"></p>
+                    <h2 id="poster-title" class="title" contenteditable="true"></h2>
+                    <p id="poster-location" class="location" contenteditable="true"></p>
+                </div>
+            </div>
+        </div>
+
+        <button id="export-button">Als Bild exportieren / Teilen</button>
+    </main>
+
+    <script src="app.js"></script>
+    <script>
+        // PWA Service Worker Registrierung
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // Registriert den sw.js im Root-Verzeichnis
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('Service Worker: Registrierung erfolgreich. Scope:', reg.scope))
+                    .catch(err => console.error('Service Worker: Registrierung fehlgeschlagen:', err));
+            });
+        }
+    </script>
+</body>
+</html>

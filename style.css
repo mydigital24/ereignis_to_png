@@ -1,0 +1,261 @@
+/* Globale Stile und Responsivität */
+:root {
+    --primary-color: #3f51b5; /* Ein schönes Blau */
+    --secondary-color: #f0f0f0;
+    --background-start: #f8f9fa;
+    --background-end: #e9ecef;
+    --shadow-light: rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(135deg, var(--background-start), var(--background-end));
+    color: #343a40;
+    box-sizing: border-box;
+}
+
+header {
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+    text-align: center;
+}
+
+main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Poster Container */
+#poster-container {
+    width: 90%;
+    max-width: 400px; /* Postergröße auf dem Desktop */
+    aspect-ratio: 3 / 4; /* Übliches Posterformat */
+    margin-bottom: 30px;
+    box-shadow: 0 10px 20px var(--shadow-light);
+}
+
+/* Das Poster selbst (wird zu Canvas/Bild) */
+#poster {
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    box-sizing: border-box;
+    overflow: hidden; 
+    transition: all 0.3s ease;
+}
+
+.poster-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.title {
+    margin: 0;
+    font-weight: 900;
+    line-height: 1.1;
+}
+
+.date, .location {
+    margin: 0.5em 0;
+    font-weight: 400;
+    text-transform: uppercase;
+}
+
+/* --- Stil: Modern Minimal --- */
+.poster.modern {
+    background-color: #ffffff; 
+    color: #343a40;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); 
+}
+
+.poster.modern .title {
+    font-size: clamp(3em, 10vw, 4.5em);
+    letter-spacing: -2px;
+}
+
+.poster.modern .date, .poster.modern .location {
+    font-size: clamp(0.8em, 2vw, 1.1em);
+    color: inherit; 
+    opacity: 0.7;
+}
+
+/* --- Stil: Elegant --- */
+.poster.elegant {
+    background: linear-gradient(180deg, #2c3e50, #4c6d88); 
+    color: #ecf0f1;
+    border: 5px solid #f1c40f; 
+    border-radius: 0; 
+    box-shadow: none;
+    padding: 20px;
+}
+
+.poster.elegant .title {
+    font-family: serif; 
+    font-size: clamp(2.5em, 8vw, 3.8em);
+    font-style: italic;
+    font-weight: 300;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.poster.elegant .date, .poster.elegant .location {
+    font-family: monospace;
+    font-size: clamp(0.9em, 2.5vw, 1.2em);
+    color: inherit; 
+    letter-spacing: 2px;
+}
+
+/* --- STILE FÜR KONTROLLEN --- */
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin-bottom: 20px;
+    width: 90%;
+    max-width: 400px;
+}
+
+.control-group {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.color-controls {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.color-controls label {
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+/* Button-Styling für den Dateiupload */
+.button-like {
+    background-color: #6c757d;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s;
+    width: 100%;
+}
+
+.button-like:hover {
+    background-color: #5a6268;
+}
+
+
+/* --- STILE FÜR EDITIERBAREN TEXT --- */
+[contenteditable="true"] {
+    cursor: text;
+    padding: 5px;
+    min-width: 50px; 
+}
+
+[contenteditable="true"]:focus {
+    outline: 1px dashed var(--primary-color);
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+
+/* --- STIL FÜR LADE-FEEDBACK (ICS-Import) --- */
+.button-like.loading {
+    background-color: #ffc107; 
+    color: #343a40;
+    font-weight: bold;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 193, 7, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
+}
+
+
+/* Export Button */
+#export-button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.1em;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.2s, box-shadow 0.2s;
+    width: 90%;
+    max-width: 400px;
+}
+
+#export-button:hover {
+    background-color: #536dfe;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+}
+
+.style-toggle {
+    margin: 10px 0 0;
+    width: 100%;
+}
+
+#style-select {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 1em;
+    width: 100%;
+}
+
+/* Responsivität für kleinere Bildschirme (iPhone) */
+@media (max-width: 480px) {
+    #poster-container {
+        width: 95%;
+        max-width: none;
+    }
+
+    #export-button {
+        width: 95%;
+    }
+    
+    .controls {
+        width: 95%;
+    }
+    
+    .control-group.color-controls {
+        width: 100%;
+        flex-direction: column; 
+        align-items: flex-start;
+        gap: 5px;
+    }
+}
