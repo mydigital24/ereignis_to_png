@@ -37,13 +37,14 @@ main {
     box-sizing: border-box;
 }
 
-/* Poster Container */
+/* Poster Container (wird nur für die Vorschau auf 3:4 gesetzt) */
 #poster-container {
     width: 90%;
-    max-width: 400px; /* Postergröße auf dem Desktop */
-    aspect-ratio: 3 / 4; /* Übliches Posterformat */
+    max-width: 400px; 
+    aspect-ratio: 3 / 4; 
     margin-bottom: 30px;
     box-shadow: 0 10px 20px var(--shadow-light);
+    transition: max-width 0.3s ease;
 }
 
 /* Das Poster selbst (wird zu Canvas/Bild) */
@@ -59,7 +60,6 @@ main {
     text-align: center;
     box-sizing: border-box;
     overflow: hidden; 
-    transition: all 0.3s ease;
 }
 
 .poster-content {
@@ -67,20 +67,27 @@ main {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    flex-grow: 1; 
     width: 100%;
 }
 
-.title {
-    margin: 0;
-    font-weight: 900;
-    line-height: 1.1;
+.title { margin: 0; font-weight: 900; line-height: 1.1; }
+.date, .location { margin: 0.5em 0; font-weight: 400; text-transform: uppercase; }
+
+/* --- IMAGEM STYLING (Text oben) --- */
+.imagem {
+    margin: 0 0 10px 0;
+    font-size: clamp(0.7em, 1.5vw, 0.9em);
+    font-weight: 600;
+    opacity: 0.8;
+    align-self: flex-start;
+    text-align: left;
+    width: 100%;
 }
 
-.date, .location {
-    margin: 0.5em 0;
-    font-weight: 400;
-    text-transform: uppercase;
+.empty-bottom {
+    /* Platzhalter, um den space-between Effekt im Flex-Container zu perfektionieren */
+    height: 1em;
 }
 
 /* --- Stil: Modern Minimal --- */
@@ -90,41 +97,24 @@ main {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); 
 }
 
-.poster.modern .title {
-    font-size: clamp(3em, 10vw, 4.5em);
-    letter-spacing: -2px;
-}
-
-.poster.modern .date, .poster.modern .location {
-    font-size: clamp(0.8em, 2vw, 1.1em);
-    color: inherit; 
-    opacity: 0.7;
-}
+.poster.modern .title { font-size: clamp(3em, 10vw, 4.5em); letter-spacing: -2px; }
+.poster.modern .date, .poster.modern .location { font-size: clamp(0.8em, 2vw, 1.1em); opacity: 0.7; }
+.poster.modern .imagem { color: inherit; }
 
 /* --- Stil: Elegant --- */
 .poster.elegant {
     background: linear-gradient(180deg, #2c3e50, #4c6d88); 
     color: #ecf0f1;
-    border: 5px solid #f1c40f; 
+    border: 5px solid; /* Border Farbe wird von JS über poster.style.borderColor gesetzt */
     border-radius: 0; 
     box-shadow: none;
     padding: 20px;
 }
 
-.poster.elegant .title {
-    font-family: serif; 
-    font-size: clamp(2.5em, 8vw, 3.8em);
-    font-style: italic;
-    font-weight: 300;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-}
+.poster.elegant .title { font-family: serif; font-size: clamp(2.5em, 8vw, 3.8em); font-style: italic; font-weight: 300; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); }
+.poster.elegant .date, .poster.elegant .location { font-family: monospace; font-size: clamp(0.9em, 2.5vw, 1.2em); letter-spacing: 2px; }
+.poster.elegant .imagem { color: inherit; } /* Im Elegant-Stil nutzt Imagem die Textfarbe */
 
-.poster.elegant .date, .poster.elegant .location {
-    font-family: monospace;
-    font-size: clamp(0.9em, 2.5vw, 1.2em);
-    color: inherit; 
-    letter-spacing: 2px;
-}
 
 /* --- STILE FÜR KONTROLLEN --- */
 
@@ -139,10 +129,18 @@ main {
 }
 
 .control-group {
-    flex-grow: 1;
+    /* Standardmäßig nimmt jedes Control die Hälfte der Breite ein */
+    flex-basis: calc(50% - 7.5px); 
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    box-sizing: border-box;
+}
+
+.control-group.full-width {
+    width: 100%;
+    flex-basis: 100%; /* Übernimmt die volle Breite (Imagem, Import-URL) */
+    flex-grow: 0;
 }
 
 .color-controls {
@@ -152,12 +150,23 @@ main {
     gap: 10px;
 }
 
-.color-controls label {
+label {
     font-size: 0.8em;
     font-weight: bold;
+    margin-bottom: 5px;
 }
 
-/* Button-Styling für den Dateiupload */
+/* Eingabefelder und Selects (Text, Zahl, Select) */
+input[type="text"], input[type="number"], select { 
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 1em;
+    width: 100%; /* Wichtig, damit sie im Flex-Container die volle Basisbreite einnehmen */
+    box-sizing: border-box;
+}
+
+/* Stil für den Upload- und Import-Button */
 .button-like {
     background-color: #6c757d;
     color: white;
@@ -169,18 +178,29 @@ main {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: background-color 0.2s;
     width: 100%;
+    border: none;
+    box-sizing: border-box;
 }
 
-.button-like:hover {
-    background-color: #5a6268;
-}
+.button-like:hover { background-color: #5a6268; }
 
+#import-url-field { margin-bottom: 10px; }
+
+/* --- Export und Feedback --- */
+.export-hint {
+    font-size: 0.8em;
+    color: #6c757d;
+    text-align: center;
+    max-width: 400px;
+    margin-top: -20px;
+}
 
 /* --- STILE FÜR EDITIERBAREN TEXT --- */
 [contenteditable="true"] {
     cursor: text;
-    padding: 5px;
+    padding: 2px 5px;
     min-width: 50px; 
+    border-radius: 3px;
 }
 
 [contenteditable="true"]:focus {
@@ -189,7 +209,7 @@ main {
 }
 
 
-/* --- STIL FÜR LADE-FEEDBACK (ICS-Import) --- */
+/* --- LADE-FEEDBACK --- */
 .button-like.loading {
     background-color: #ffc107; 
     color: #343a40;
@@ -219,43 +239,23 @@ main {
     max-width: 400px;
 }
 
-#export-button:hover {
-    background-color: #536dfe;
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
-}
+#export-button:hover { background-color: #536dfe; box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3); }
 
-.style-toggle {
-    margin: 10px 0 0;
-    width: 100%;
-}
-
-#style-select {
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    font-size: 1em;
-    width: 100%;
-}
-
-/* Responsivität für kleinere Bildschirme (iPhone) */
+/* Responsivität für kleinere Bildschirme (Mobile) */
 @media (max-width: 480px) {
-    #poster-container {
-        width: 95%;
-        max-width: none;
-    }
+    #poster-container { width: 95%; max-width: none; }
+    #export-button { width: 95%; }
+    .controls { width: 95%; }
 
-    #export-button {
-        width: 95%;
+    /* Auf kleinen Bildschirmen nehmen alle Steuerelemente volle Breite ein, außer Farb-Inputs */
+    .control-group {
+        flex-basis: 100%;
     }
     
-    .controls {
-        width: 95%;
-    }
-    
-    .control-group.color-controls {
-        width: 100%;
-        flex-direction: column; 
-        align-items: flex-start;
-        gap: 5px;
+    .control-group.color-controls { 
+        flex-basis: 100%;
+        flex-direction: row; /* Farben nebeneinander lassen */
+        justify-content: space-between;
+        gap: 10px;
     }
 }
